@@ -1,0 +1,191 @@
+/* frontend-admin/src/pages/LoginPage.css */
+.admin-login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #e9ecef;
+}
+.admin-login-box {
+  background: white;
+  padding: 40px 32px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+}
+.admin-login-box h1 {
+  font-size: 1.6rem;
+  margin-bottom: 8px;
+  color: #343a40;
+}
+.admin-login-box p {
+  color: #6c757d;
+  margin-bottom: 24px;
+}
+.admin-login-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+.admin-login-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #495057;
+}
+.admin-login-group input {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+.admin-login-button {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  background-color: #0d6efd;
+  color: white;
+  cursor: pointer;
+  margin-top: 8px;
+}
+.admin-login-button:disabled {
+  background-color: #a0c3e6;
+}
+.admin-login-error {
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c2c7;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+/* Tambahkan di akhir LoginPage.css */
+.admin-separator {
+  display: block;
+  text-align: center;
+  margin: 20px 0;
+  color: #adb5bd;
+  font-size: 0.9rem;
+}
+
+.admin-google-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  background-color: white;
+  color: #495057;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.admin-google-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+.admin-login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #e9ecef;
+}
+.admin-login-box {
+  background: white;
+  padding: 40px 32px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+}
+.admin-login-box h1 {
+  font-size: 1.6rem;
+  margin-bottom: 8px;
+  color: #343a40;
+}
+.admin-login-box p {
+  color: #6c757d;
+  margin-bottom: 24px;
+}
+.admin-login-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+.admin-login-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #495057;
+}
+.admin-login-group input {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+.admin-login-button {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  background-color: #0d6efd;
+  color: white;
+  cursor: pointer;
+  margin-top: 8px;
+}
+.admin-login-button:disabled {
+  background-color: #a0c3e6;
+}
+.admin-login-error {
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c2c7;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+.admin-separator {
+  display: block;
+  text-align: center;
+  margin: 20px 0;
+  color: #adb5bd;
+  font-size: 0.9rem;
+}
+.admin-google-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  background-color: white;
+  color: #495057;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.admin-google-btn img {
+  width: 20px;
+  height: 20px;
+}

@@ -1,0 +1,880 @@
+/* =================================================================
+   KODE CSS MASTER FINAL - SEMUA HALAMAN
+   ================================================================= */
+
+/* -- 1. Pengaturan Dasar & Skala ("Zoom Out") -- */
+:root {
+  font-family: 'Poppins', sans-serif;
+  font-size: 67%; 
+}
+body {
+  margin: 0;
+  background-color: #f7f9fc;
+  color: #2c3e50;
+  overflow-x: hidden;
+}
+* { box-sizing: border-box; }
+
+/* -- 2. Layout Utama -- */
+.app-layout {
+  position: relative;
+  display: flex;
+}
+.sidebar {
+  width: 16.25rem;
+  height: 100vh;
+  background-color: #ffffff;
+  border-right: 1px solid #eef2f7;
+  padding: 1rem;
+  flex-shrink: 0;
+}
+.page-container {
+  flex-grow: 1;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.main-header {
+  height: 80px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #eef2f7;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 2rem;
+  flex-shrink: 0;
+}
+.main-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 1.5rem 2rem;
+}
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin: 0 0 2rem 0;
+}
+
+/* -- 3. Komponen Umum -- */
+.user-profile { display: flex; align-items: center; gap: 0.8rem; }
+.user-profile .avatar { width: 40px; height: 40px; border-radius: 50%; background-color: #e2e8f0; }
+.sidebar-header { text-align: center; padding: 1rem 0 2rem 0; font-size: 1.8rem; font-weight: 600; }
+.sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
+.sidebar-nav li a { display: block; padding: 1rem 1.5rem; margin-bottom: 0.5rem; text-decoration: none; color: #718096; font-weight: 500; border-radius: 8px; transition: all 0.2s; }
+.sidebar-nav li a.active, .sidebar-nav li a:hover { background: linear-gradient(90deg, #28a745, #007bff); color: white; }
+.deals-details { background-color: #ffffff; border-radius: 12px; padding: 1.5rem; border: 1px solid #eef2f7; }
+.deals-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.deals-header h2 { margin: 0; font-size: 1.25rem; }
+.controls-wrapper { display: flex; gap: 1rem; align-items: center; }
+.search-bar, .sort-by { padding: 0.7rem 1rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; }
+
+/* -- 4. Tabel -- */
+.table-container { width: 100%; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 1rem 1.25rem; text-align: left; border-bottom: 1px solid #eef2f7; white-space: nowrap; }
+th { font-weight: 500; font-size: 0.85rem; color: #718096; text-transform: uppercase; position: sticky; top: 0; background-color: #ffffff; z-index: 1;}
+.produk-cell span { display: block; white-space: normal; min-width: 250px; }
+
+/* -- 5. Kartu KPI (Dashboard) -- */
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+.kpi-card { background-color: #ffffff; border-radius: 12px; padding: 1.5rem; border: 1px solid #eef2f7; display: flex; align-items: center; gap: 1.5rem; }
+.kpi-title { font-size: 1rem; color: #718096; }
+.kpi-value { font-size: 2rem; font-weight: 600; display: block; margin: 0.25rem 0; }
+.kpi-footer { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; }
+.kpi-percentage.positive { color: #28a745; }
+.kpi-percentage.negative { color: #e53e3e; }
+
+/* -- 6. Badge Status (Lunas, Packing, dll) -- */
+/* Kode Perbaikan */
+.status {
+  display: block; /* Memungkinkan kita mengatur lebar dan margin auto */
+  width: 80px;   /* Beri lebar tetap yang cukup untuk teks terpanjang */
+  margin: 0 auto; /* Membuat pil berada di tengah kolomnya */
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: center; /* Memastikan teks di dalam pil juga di tengah */
+}
+.status.lunas, .status.aktif { background-color: #009dffcc; }
+.status.menunggak { background-color: #f6e05ecc; color: #2d3748; }
+.status.selesai { background-color: #88e8c8cc; }
+.status.arsip { background-color: #a0aec0; }
+.status-packing {
+  display: block;
+  width: 90px; /* Lebar tetap, sedikit lebih besar untuk teks yg lebih panjang */
+  margin: 0 auto;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: center;
+}
+.status-packing.sedang-dikemas { background-color: #3b82f6; }
+.status-packing.belum-dikemas { background-color: #ef4444; }
+.status-packing.siap-dikirim { background-color: #22c55e; }
+
+/* ... (Kode CSS lainnya) ... */
+
+/* Styling untuk Tombol Aksi Massal di Packing Page */
+.packing-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+.packing-actions button {
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+.packing-actions button:hover {
+    opacity: 0.85;
+}
+.btn-dikemas { background-color: #3b82f6; } /* Blue */
+.btn-belum-dikemas { background-color: #dc2626; } /* Red */
+.btn-siap-dikirim { background-color: #16a34a; } /* Green */
+
+.btn-cetak-resi {
+    all: unset; /* reset semua gaya bawaan jika perlu */
+    background-color: #01625d;
+    color: white;
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+.btn-cetak-resi:disabled {
+ opacity: 0.6;
+ cursor: not-allowed;
+}
+
+/* Styling untuk Tombol Aksi Massal di Kelola Produk Page */
+.controls-wrapper .bulk-action-btn {
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    margin-left: 0.5rem;
+}
+.controls-wrapper .bulk-action-btn:hover {
+    opacity: 0.85;
+}
+.btn-arsip { background-color: #facc15; color: #2d3748; } /* Yellow */
+.btn-aktif { background-color: #10b981; } /* Teal */
+.btn-hapus { background-color: #ef4444; } /* Red */
+.edit-btn {
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    background-color: #3b82f6; /* Blue */
+    margin-left: 0.5rem;
+}
+.edit-btn:hover {
+    opacity: 0.85;
+}
+
+/* Styling untuk Bagian Varian di AddProductPage (Pastikan ini ada) */
+.variant-section { display: flex; flex-direction: column; gap: 1.5rem; }
+.variant-row { display: flex; align-items: flex-start; gap: 1rem; }
+.variant-image-uploader { width: 50px; height: 50px; border: 2px dashed #e2e8f0; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #cbd5e0; flex-shrink: 0; margin-top: 1.75rem; }
+.variant-image-uploader .image-preview { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
+.variant-details { display: flex; flex-grow: 1; gap: 1rem; }
+.variant-group { flex-grow: 1; display: flex; flex-direction: column; }
+.variant-group label { margin-bottom: 0.5rem; font-size: 0.8rem; }
+.variant-group input {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.8rem;
+}
+.remove-variant-btn { background-color: #fed7d7; color: #c53030; border: none; border-radius: 50%; width: 24px; height: 24px; font-size: 0.8rem; cursor: pointer; flex-shrink: 0; margin-top: 1.75rem; display: flex; align-items: center; justify-content: center; }
+.add-variant-btn { background-color: #ebf8ff; color: #3182ce; border: 1px dashed #90cdf4; border-radius: 6px; padding: 0.6rem 0.75rem; cursor: pointer; text-align: center; font-weight: 500; margin-top: 1rem; font-size: 0.8rem; }
+
+/* ... (Sisa Kode CSS Anda) ... */
+
+/* -- 7. Gaya Halaman "Add Product" -- */
+.add-product-form { display: flex; flex-direction: column; gap: 1.5rem; }
+.form-card { background-color: #ffffff; border: 1px solid #eef2f7; border-radius: 12px; padding: 2rem; }
+.form-card h3 { margin-top: 0; font-size: 1.25rem; border-bottom: 1px solid #eef2f7; padding-bottom: 1rem; margin-bottom: 1.5rem; }
+.form-group { margin-bottom: 1.5rem; }
+.form-group:last-child { margin-bottom: 0; }
+.form-group label { display: block; font-weight: 500; margin-bottom: 0.5rem; color: #4a5568; }
+.form-group input[type="text"], .form-group input[type="number"], .form-group textarea { width: 100%; padding: 0.8rem 1rem; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 1rem; font-family: inherit; }
+.form-group textarea { resize: vertical; min-height: 120px; }
+.main-info-container { display: grid; grid-template-columns: auto 1fr; gap: 1.5rem; align-items: flex-start; }
+.left-column { display: flex; flex-direction: column; gap: 1.5rem; width: 250px; }
+.right-column { flex-grow: 1; }
+.multi-image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 1rem; }
+.image-uploader-box { width: 100%; height: 120px; border: 2px dashed #e2e8f0; border-radius: 8px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 1.5rem; color: #cbd5e0; transition: all 0.2s; }
+.image-uploader-box:hover { border-color: #007bff; color: #007bff; background-color: #f7f9fc; }
+.image-uploader-box p { font-size: 0.8rem; margin: 0; }
+.image-preview-wrapper { position: relative; width: 100%; height: 120px; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; }
+.image-preview-wrapper .image-preview { width: 100%; height: 100%; object-fit: contain; } /* TIDAK ZOOM */
+.remove-image-btn { position: absolute; top: 4px; right: 4px; background-color: rgba(0, 0, 0, 0.6); color: white; border: none; border-radius: 50%; width: 24px; height: 24px; font-size: 1rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
+.image-preview-wrapper:hover .remove-image-btn { opacity: 1; }
+.form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.pricing-toggle, .preorder-toggle { display: flex; gap: 2rem; align-items: center; }
+.pricing-toggle label, .preorder-toggle label { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+.variant-section { display: flex; flex-direction: column; gap: 1.5rem; }
+.variant-row { display: flex; align-items: flex-start; gap: 1rem; }
+.variant-image-uploader { width: 60px; height: 60px; border: 2px dashed #e2e8f0; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #cbd5e0; flex-shrink: 0; }
+.variant-image-uploader .image-preview { width: 100%; height: 100%; object-fit: cover; border-radius: 6px;}
+.variant-details { display: flex; flex-grow: 1; gap: 1rem; }
+.variant-group { flex-grow: 1; display: flex; flex-direction: column; }
+.variant-group label { margin-bottom: 0.5rem; }
+.remove-variant-btn { background-color: #fed7d7; color: #c53030; border: none; border-radius: 50%; width: 32px; height: 32px; font-size: 1.2rem; cursor: pointer; flex-shrink: 0; margin-top: 1.8rem; }
+.add-variant-btn { background-color: #ebf8ff; color: #3182ce; border: 1px dashed #90cdf4; border-radius: 8px; padding: 0.7rem; cursor: pointer; text-align: center; font-weight: 500; margin-top: 1rem; }
+/* KELAS TOMBOL GLOBAL (BISA DIGUNAKAN DI MANA SAJA) */
+.btn-primary, .btn-secondary, .btn-delete {
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  display: inline-block; /* Agar bisa digunakan di <a> atau elemen lain */
+  text-decoration: none; /* Menghapus garis bawah jika digunakan di <a> */
+}
+
+/* Tombol Aksi Utama (Biru/Hijau) */
+.btn-primary {
+  background: linear-gradient(90deg, #28a745, #007bff);
+  color: white;
+}
+.btn-primary:hover {
+  opacity: 0.9;
+}
+.btn-primary:disabled {
+  background: linear-gradient(90deg, #28a745, #007bff);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Tombol Aksi Sekunder (Abu-abu Tua) */
+.btn-secondary {
+  background-color: #4a5568;
+  color: white;
+}
+.btn-secondary:hover {
+  background-color: #2d3748;
+}
+
+/* Tombol Aksi Reset/Hapus (Abu-abu Cerah) */
+.btn-delete {
+  background-color: #e2e8f0;
+  color: #4a5568;
+}
+.btn-delete:hover {
+  background-color: #cbd5e0;
+}
+
+/* Container untuk tombol di akhir form (hanya untuk layouting) */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+/* ... (Kode CSS lainnya) ... */
+
+/* Gaya untuk horizontal image grid */
+.horizontal-image-grid {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto; /* Membuat scroll horizontal jika gambar terlalu banyak */
+    padding-bottom: 0.75rem; /* Beri ruang untuk scrollbar */
+}
+
+.horizontal-image-grid .image-preview-wrapper {
+    width: 80px;
+    flex-shrink: 0; /* Agar item tidak mengecil */
+    height: 80px; /* Set tinggi yang sama dengan lebar */
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    position: relative;
+}
+
+.horizontal-image-grid .image-preview-wrapper img.image-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.horizontal-image-grid .image-uploader-box {
+    width: 80px;
+    height: 80px;
+    border: 2px dashed #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: #cbd5e0;
+    transition: all 0.2s;
+}
+
+/* ======================================= */
+/* --- GAYA TAMBAHAN KHUSUS UNTUK FITUR HARGA PO --- */
+/* ======================================= */
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.po-section {
+  border-top: 1px solid #eef2f7;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+}
+
+.radio-group-horizontal {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.radio-group-horizontal label {
+  margin: 0;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+/* Membuat bagian harga reguler menjadi abu-abu saat PO aktif */
+.price-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+  transition: opacity 0.3s;
+}
+
+.price-fieldset:disabled {
+  opacity: 0.4;
+  pointer-events: none; /* Mencegah interaksi saat non-aktif */
+}
+
+/* ======================================= */
+/* --- GAYA AMAN & TERISOLASI UNTUK ADD PRODUCT PAGE --- */
+/* ======================================= */
+
+/* Semua gaya di bawah ini hanya berlaku di dalam halaman Add Product */
+
+.add-product-page-content .add-product-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.add-product-page-content .form-card {
+  background-color: #ffffff;
+  border: 1px solid #eef2f7;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+.add-product-page-content .form-card h3 {
+  margin-top: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-bottom: 1px solid #eef2f7;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+.add-product-page-content .form-group {
+  margin-bottom: 1.25rem;
+}
+.add-product-page-content .form-group:last-child {
+  margin-bottom: 0;
+}
+.add-product-page-content .form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #4a5568;
+}
+.add-product-page-content .form-group input[type="text"],
+.add-product-page-content .form-group input[type="number"],
+.add-product-page-content .form-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+.add-product-page-content .form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Gaya untuk foto produk horizontal */
+.add-product-page-content .horizontal-image-grid {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  padding-bottom: 0.75rem;
+}
+.add-product-page-content .horizontal-image-grid .image-preview-wrapper,
+.add-product-page-content .horizontal-image-grid .image-uploader-box {
+  width: 140px;
+  height: 140px;
+  flex-shrink: 0;
+}
+.add-product-page-content .image-uploader-box {
+    border: 2px dashed #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #cbd5e0;
+    transition: all 0.2s;
+}
+.add-product-page-content .image-uploader-box:hover {
+    border-color: #007bff;
+}
+.add-product-page-content .image-uploader-box p {
+    font-size: 0.8rem;
+    margin: 0;
+}
+.add-product-page-content .image-preview-wrapper {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+}
+.add-product-page-content .image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.add-product-page-content .remove-image-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+.add-product-page-content .image-preview-wrapper:hover .remove-image-btn {
+    opacity: 1;
+}
+
+/* File: frontend-admin/src/App.css */
+
+/* Tambahkan ini di bagian paling bawah file */
+
+/* Styling untuk dropdown (select) agar mirip dengan input text */
+.form-group select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #fff;
+  appearance: none; /* Menghilangkan style default panah dropdown */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+  cursor: pointer;
+}
+
+/* Styling untuk dropdown saat dalam kondisi disabled */
+.form-group select:disabled {
+  background-color: #f2f2f2;
+  cursor: not-allowed;
+  color: #888;
+}
+
+/* File: frontend-admin/src/App.css */
+/* ... (tambahkan di paling bawah) ... */
+
+.kategori-container {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 2rem;
+}
+
+.kategori-forms .form-card {
+  margin-bottom: 2rem;
+}
+
+.kategori-forms .form-card:last-child {
+  margin-bottom: 0;
+}
+
+.kategori-list .table-container {
+  margin-top: 0;
+}
+
+.univ-logo-table {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+}
+
+.kategori-opsi {
+  display: flexbox;
+  gap: 0.5rem;
+}
+
+.btn-secondary-small, .btn-delete-small {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.btn-secondary-small {
+  background-color: #e9ecef;
+  color: #495057;
+}
+
+.btn-delete-small {
+  background-color: #fff5f5;
+  color: #c53030;
+}
+
+/* File: frontend-admin/src/App.css */
+/* ... (tambahkan/pastikan style ini ada) ... */
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Style untuk tombol saat disabled (loading) */
+.btn-primary:disabled {
+  background-color: #7aace4; /* Warna biru lebih muda */
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+/* --- STYLE UNTUK MODAL EDIT --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #f7f9fc;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 900px; /* Lebar maksimal modal */
+  max-height: 90vh; /* Tinggi maksimal modal */
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eef2f7;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  font-weight: 300;
+  cursor: pointer;
+  color: #718096;
+}
+
+.modal-body {
+  overflow-y: auto; /* Membuat isi form bisa di-scroll jika terlalu panjang */
+  padding-right: 1rem; /* Memberi ruang untuk scrollbar */
+}
+
+
+.status.lunas,
+.status { padding: 0.3rem 0.8rem; border-radius: 999px; color: white; font-size: 0.8rem; font-weight: 500; }
+
+
+.status.selesai {
+    background-color: #62cc7b; /* Hijau */
+}
+
+/* Menggunakan .menunggak sesuai nama status baru */
+.status.menunggak {
+    background-color: #ffc107; /* Kuning */
+    color: #ffffff; /* Warna teks gelap agar terbaca */
+}
+
+.status.dibatalkan {
+    background-color: #dc3545; /* Merah */
+}
+
+.status.diproses {
+    background-color: #17a2b8; /* Biru kehijauan */
+}
+
+/* -- 8. STYLE KHUSUS UNTUK PACKING PAGE CONTROLS -- */
+/* Tambahkan ini di paling bawah App.css */
+
+.page-controls-card {
+  background-color: #ffffff;
+  border: 1px solid #eef2f7;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap; /* Agar responsif di layar kecil */
+  gap: 2rem;
+  align-items: center;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden; /* Agar sudut tombol di dalam ikut melengkung */
+}
+
+.control-group input,
+.control-group select {
+  padding: 0.7rem 1rem;
+  border: none;
+  font-size: 1rem;
+  outline: none;
+}
+
+.control-group button {
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.7rem 1.2rem;
+  border: none;
+  border-left: 1px solid #e2e8f0;
+  cursor: pointer;
+  background-color: #3b82f6; /* Warna biru */
+  color: white;
+  transition: background-color 0.2s;
+}
+
+.control-group button:hover {
+  background-color: #2563eb;
+}
+
+.control-group button:disabled {
+  background-color: #93c5fd;
+  cursor: not-allowed;
+}
+
+.status.menunggu-pelunasan {
+    background-color: #7375d0cc; /* Warna Indigo/Ungu */
+}
+
+/* Tambahkan ini di paling bawah App.css */
+
+/* Untuk kolom yang teksnya boleh wrap ke bawah (pembayaran) */
+td.td-payment-details {
+  white-space: normal;
+  min-width: 130px;
+  vertical-align: top;
+  font-size: 0.9rem;
+}
+td.td-payment-details span {
+    display: block;
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+/* Untuk kolom yang teksnya bisa di-scroll horizontal */
+td.td-scroll-content-container {
+  max-width: 250px;
+  vertical-align: top;
+}
+
+.td-scroll-content {
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: 5px;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.td-scroll-content::-webkit-scrollbar {
+  display: none;
+}
+
+/* Tambahkan kode ini ke file CSS admin Anda */
+
+/* --- STYLE UNTUK BAGIAN PROFIL & LOGOUT BARU --- */
+
+.sidebar-profile-section {
+  position: relative; /* Penting untuk posisi dropdown */
+  margin-bottom: 2rem;
+}
+
+.profile-trigger {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 12px;
+  background-color: #f7f9fc;
+  border: 1px solid #eef2f7;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+}
+.profile-trigger:hover {
+  border-color: #dee4ed;
+}
+
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 12px;
+  background-color: #e2e8f0; /* Warna placeholder jika gambar tidak ada */
+}
+
+.profile-info {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.profile-email {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #2c3e50;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-role {
+  display: block;
+  font-size: 0.8rem;
+  color: #718096;
+  text-transform: capitalize;
+}
+
+.profile-chevron {
+  transition: transform 0.2s ease-in-out;
+}
+.profile-chevron.open {
+  transform: rotate(180deg);
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  z-index: 10;
+  border: 1px solid #eef2f7;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #e53e3e; /* Warna merah untuk logout */
+  transition: background-color 0.2s ease;
+}
+.logout-button:hover {
+  background-color: #fef2f2;
+}
+.logout-button img {
+  width: 18px;
+  height: 18px;
+}
+
+/* --- STYLE UNTUK LOGO BARU --- */
+.sidebar-logo-container {
+  text-align: center;
+  padding: 1rem 0 2rem 0;
+}
+.sidebar-logo {
+  height: 40px; /* Sesuaikan ukuran logo Anda */
+  width: auto;
+}
+
+/* Hapus header teks yang lama jika masih ada */
+.sidebar-header {
+  display: none;
+}

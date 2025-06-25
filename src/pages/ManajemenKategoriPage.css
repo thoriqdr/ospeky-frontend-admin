@@ -1,0 +1,141 @@
+/* File: frontend-admin/src/pages/ManajemenKategoriPage.css */
+
+.kategori-container {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 2rem;
+    align-items: flex-start;
+}
+  
+.kategori-forms .form-card {
+    margin-bottom: 2rem;
+}
+  
+.kategori-forms .form-card:last-child {
+    margin-bottom: 0;
+}
+
+.file-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.btn-file-input {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #f0f0f0;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+.btn-file-input:hover {
+    background-color: #e2e2e2;
+}
+.file-name-display {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.univ-logo-table {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+}
+  
+.kategori-opsi {
+    display: inline-flex; /* <-- UBAH BARIS INI */
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+  
+.btn-secondary-small, .btn-delete-small {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+  
+.btn-secondary-small {
+    background-color: #e9ecef;
+    color: #495057;
+}
+  
+.btn-delete-small {
+    background-color: #fff5f5;
+    color: #c53030;
+}
+
+/* --- STYLE BARU UNTUK FITUR EXPAND/ACCORDION --- */
+
+.univ-row {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.univ-row:hover {
+    background-color: #f8f9fa;
+}
+.expander {
+    display: inline-block;
+    transition: transform 0.3s ease;
+    font-size: 10px;
+    color: #718096;
+}
+.expander.expanded {
+    transform: rotate(-180deg);
+}
+.fakultas-detail-row td {
+    padding: 0;
+    border-top: none;
+    /* Efek transisi untuk muncul/hilang */
+    transition: all 0.3s ease;
+}
+.fakultas-list-wrapper {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-left: 3px solid #007bff; /* Garis penanda */
+}
+.fakultas-list-wrapper ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.fakultas-list-wrapper li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    border: 1px solid #eef2f7;
+}
+.btn-delete-fakultas {
+    background-color: transparent;
+    border: none;
+    color: #e53e3e;
+    cursor: pointer;
+    font-size: 1.5rem;
+    line-height: 1;
+    padding: 0 0.5rem;
+    border-radius: 50%;
+}
+.btn-delete-fakultas:hover {
+    background-color: #fed7d7;
+}
+.fakultas-loading {
+    padding: 1rem;
+    color: #718096;
+}
+
