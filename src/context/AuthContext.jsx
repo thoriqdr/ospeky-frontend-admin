@@ -13,7 +13,7 @@ import {
   updatePassword
 } from 'firebase/auth';
 import { auth } from '../firebase/firebaseConfig';
-import axios from 'axios';
+import api from '../api/api';
 
 const AuthContext = createContext();
 
@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
     const token = await result.user.getIdToken();
     
     // Kirim token ke backend, backend akan menangani pembuatan/pencarian user di Prisma
-    const response = await axios.post('/api/auth/google', { token });
+    const response = await api.post('/auth/google', { token });
     
     // Kembalikan respons dari backend, yang berisi { user, isNewUser }
     return response.data;
