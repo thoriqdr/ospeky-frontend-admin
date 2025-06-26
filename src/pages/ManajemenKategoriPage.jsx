@@ -1,8 +1,10 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import axios from 'axios';
+// --- PERUBAHAN 1: Hapus 'axios', impor 'api' yang sudah dikonfigurasi ---
+import api from '../api/api'; // Menggunakan instance axios terpusat dari api.js
 import './ManajemenKategoriPage.css';
 
-const API_URL = 'http://localhost:5000/api/categories';
+// --- PERUBAHAN 2: Hapus konstanta API_URL yang hardcoded ---
+// const API_URL = 'http://localhost:5000/api/categories'; // BARIS INI DIHAPUS
 
 const ManajemenKategoriPage = () => {
     const [universitasList, setUniversitasList] = useState([]);
@@ -14,15 +16,14 @@ const ManajemenKategoriPage = () => {
     const [isSubmittingUniv, setIsSubmittingUniv] = useState(false);
     const [isSubmittingFakultas, setIsSubmittingFakultas] = useState(false);
     
-    // State untuk fitur expand/collapse
     const [expandedUnivId, setExpandedUnivId] = useState(null);
     const [fakultasDetails, setFakultasDetails] = useState([]);
     const [isFakultasDetailLoading, setIsFakultasDetailLoading] = useState(false);
 
-    // Fungsi untuk mengambil data universitas
     const fetchUniversitas = () => {
         setIsLoading(true);
-        axios.get(`${API_URL}/universitas`)
+        // --- PERUBAHAN 3: Gunakan 'api' untuk semua request ---
+        api.get('/categories/universitas') // Path relatif sudah cukup
             .then(res => setUniversitasList(res.data))
             .catch(err => console.error("Gagal mengambil data universitas", err))
             .finally(() => setIsLoading(false));
@@ -32,7 +33,6 @@ const ManajemenKategoriPage = () => {
         fetchUniversitas();
     }, []);
 
-    // Fungsi untuk handle form submit
     const handleUniversitasSubmit = async (e) => {
         e.preventDefault();
         if (!newUnivName || !newUnivLogo) {
@@ -44,7 +44,8 @@ const ManajemenKategoriPage = () => {
         formData.append('nama', newUnivName);
         formData.append('logo', newUnivLogo);
         try {
-            await axios.post(`${API_URL}/universitas`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+            // --- PERUBAHAN 4: Gunakan 'api' ---
+            await api.post('/categories/universitas', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
             alert('Universitas baru berhasil ditambahkan!');
             setNewUnivName('');
             setNewUnivLogo(null);
@@ -65,7 +66,8 @@ const ManajemenKategoriPage = () => {
         }
         setIsSubmittingFakultas(true);
         try {
-            await axios.post(`${API_URL}/fakultas`, { nama: newFakultasName, universitasId: parentUniv });
+            // --- PERUBAHAN 5: Gunakan 'api' ---
+            await api.post('/categories/fakultas', { nama: newFakultasName, universitasId: parentUniv });
             alert('Fakultas baru berhasil ditambahkan!');
             setNewFakultasName('');
             setParentUniv('');
@@ -76,12 +78,12 @@ const ManajemenKategoriPage = () => {
         }
     };
     
-    // Fungsi untuk aksi pada universitas
     const handleStatusChange = async (id, currentStatus) => {
         const newStatus = currentStatus === 'Aktif' ? 'Arsip' : 'Aktif';
         if (window.confirm(`Anda yakin ingin mengubah status universitas ini menjadi "${newStatus}"?`)) {
             try {
-                await axios.patch(`${API_URL}/universitas/${id}/status`, { status: newStatus });
+                // --- PERUBAHAN 6: Gunakan 'api' ---
+                await api.patch(`/categories/universitas/${id}/status`, { status: newStatus });
                 fetchUniversitas();
             } catch (error) { alert("Gagal mengubah status."); }
         }
@@ -90,13 +92,13 @@ const ManajemenKategoriPage = () => {
     const handleDelete = async (id, univName) => {
         if (window.confirm(`PERINGATAN: Anda akan menghapus "${univName}" secara permanen. Lanjutkan?`)) {
             try {
-                await axios.delete(`${API_URL}/universitas/${id}`);
+                // --- PERUBAHAN 7: Gunakan 'api' ---
+                await api.delete(`/categories/universitas/${id}`);
                 fetchUniversitas();
             } catch (error) { alert("Gagal menghapus universitas."); }
         }
     };
 
-    // Fungsi untuk expand/collapse baris universitas
     const toggleUniversity = (univId) => {
         const nextExpandedId = expandedUnivId === univId ? null : univId;
         setExpandedUnivId(nextExpandedId);
@@ -104,19 +106,19 @@ const ManajemenKategoriPage = () => {
         if (nextExpandedId) {
             setIsFakultasDetailLoading(true);
             setFakultasDetails([]);
-            axios.get(`${API_URL}/fakultas/${nextExpandedId}`)
+            // --- PERUBAHAN 8: Gunakan 'api' ---
+            api.get(`/categories/fakultas/${nextExpandedId}`)
                 .then(res => setFakultasDetails(res.data))
                 .catch(err => console.error(err))
                 .finally(() => setIsFakultasDetailLoading(false));
         }
     };
 
-    // Fungsi untuk menghapus fakultas
     const handleDeleteFakultas = async (fakultasId, fakultasName) => {
         if (window.confirm(`Anda yakin ingin menghapus fakultas "${fakultasName}"?`)) {
             try {
-                await axios.delete(`${API_URL}/fakultas/${fakultasId}`);
-                // Setelah berhasil hapus, muat ulang daftar fakultas untuk universitas yang sedang dibuka
+                // --- PERUBAHAN 9: Gunakan 'api' ---
+                await api.delete(`/categories/fakultas/${fakultasId}`);
                 toggleUniversity(expandedUnivId);
                 toggleUniversity(expandedUnivId);
             } catch (error) { alert('Gagal menghapus fakultas.'); }
@@ -164,7 +166,8 @@ const ManajemenKategoriPage = () => {
                                             <Fragment key={u.id}>
                                                 <tr className="univ-row" onClick={() => toggleUniversity(u.id)}>
                                                     <td><span className={`expander ${expandedUnivId === u.id ? 'expanded' : ''}`}>▼</span></td>
-                                                    <td>{u.logoUrl && <img src={`http://localhost:5000/${u.logoUrl}`} alt={u.nama} className="univ-logo-table" />}</td>
+                                                    {/* --- PERUBAHAN 10: Ambil baseURL dari api --- */}
+                                                    <td>{u.logoUrl && <img src={`${api.defaults.baseURL.replace('/api', '')}/${u.logoUrl}`} alt={u.nama} className="univ-logo-table" />}</td>
                                                     <td>{u.nama}</td>
                                                     <td><span className={`status ${u.status.toLowerCase()}`}>{u.status}</span></td>
                                                     <td onClick={e => e.stopPropagation()}>

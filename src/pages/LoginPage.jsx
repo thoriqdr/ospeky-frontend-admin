@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/api'; 
 import './LoginPage.css';
 
 const LoginPage = () => {
@@ -21,11 +21,9 @@ const LoginPage = () => {
     setError('');
     setLoading(true);
     try {
-      const userCredential = await login(email, password);
-      const token = await userCredential.user.getIdToken();
-      const config = { headers: { Authorization: `Bearer ${token}` } };
+      await login(email, password);
       // Ambil profil dari backend untuk memeriksa role
-      const { data: profile } = await axios.get('/api/users/profile', config);
+      const { data: profile } = await api.get('/users/profile');
 
       if (profile.role !== 'ADMIN') {
         await logout(); // Logout paksa jika bukan admin

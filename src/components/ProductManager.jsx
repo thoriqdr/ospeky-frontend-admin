@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-
+import api from '../api/api';
 // Alamat base URL untuk API backend kita
-const API_URL = 'http://localhost:5000/api/products';
 
 const ProductManager = () => {
   // State untuk menyimpan daftar produk dari backend
@@ -22,7 +20,7 @@ const ProductManager = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(API_URL);
+      const response = await api.get('/products');
       setProducts(response.data);
       setError(null);
     } catch (err) {
@@ -56,7 +54,7 @@ const ProductManager = () => {
     }
     setLoading(true);
     try {
-      await axios.post(API_URL, formData);
+      await api.post('/products', formData);
       // Setelah berhasil, kosongkan form dan ambil ulang data produk
       setFormData({ namaProduk: '', deskripsi: '', harga: '', stok: '' });
       fetchProducts();

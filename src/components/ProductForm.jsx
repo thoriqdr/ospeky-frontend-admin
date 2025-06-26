@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/api';
 
 console.log("--- PRODUCT FORM VERSI FINAL DIMUAT ---");
 
-const API_PRODUCT_URL = 'http://localhost:5000/api/products';
-const API_CATEGORY_URL = 'http://localhost:5000/api/categories';
-const BASE_URL = 'http://localhost:5000';
 
 const ProductForm = ({ initialData, onFormSubmit, onClose }) => {
     const navigate = useNavigate();
@@ -32,14 +29,15 @@ const ProductForm = ({ initialData, onFormSubmit, onClose }) => {
     const [selectedUniversitas, setSelectedUniversitas] = useState('');
     const [selectedFakultas, setSelectedFakultas] = useState('');
     const [isFakultasLoading, setIsFakultasLoading] = useState(false);
+    const baseUrl = api.defaults.baseURL.replace('/api', '');
 
     useEffect(() => {
-    console.log("STATE VARIANTS BERUBAH:", JSON.stringify(variants, null, 2));
+        console.log("STATE VARIANTS BERUBAH:", JSON.stringify(variants, null, 2));
     }, [variants]);
 
     // Mengambil daftar universitas
     useEffect(() => {
-        axios.get(`${API_CATEGORY_URL}/universitas?status=Aktif`)
+        api.get('/categories/universitas?status=Aktif')
             .then(response => { setUniversitasList(response.data); })
             .catch(error => { console.error("Gagal memuat daftar universitas:", error); });
     }, []);
@@ -51,7 +49,8 @@ const ProductForm = ({ initialData, onFormSubmit, onClose }) => {
             setDescription(initialData.deskripsi || '');
 
             const mainImageUrls = initialData.gambarUrls && typeof initialData.gambarUrls === 'string' ? JSON.parse(initialData.gambarUrls) : [];
-            setMainImages(mainImageUrls.map(url => ({ file: null, preview: `${BASE_URL}/${url}` })));
+            setMainImages(mainImageUrls.map(url => ({ file: null, preview: `${baseUrl}/${url}` }))); // <-- Gunakan baseUrl
+
 
             if (initialData.isPO) {
                 setIsPO(true);
@@ -75,7 +74,7 @@ const ProductForm = ({ initialData, onFormSubmit, onClose }) => {
                         price: v.harga !== null ? Number(v.harga) : '', // Pastikan ini angka
                         stock: v.stok !== null ? Number(v.stok) : '', // Pastikan ini angka
                         imageFile: null,
-                        imagePreview: v.gambarUrl ? `${BASE_URL}/${v.gambarUrl}` : ''
+                        imagePreview: v.gambarUrl ? `${baseUrl}/${v.gambarUrl}` : ''
                     }));
                     setVariants(variantsWithPreviews);
                 } else {
@@ -86,7 +85,7 @@ const ProductForm = ({ initialData, onFormSubmit, onClose }) => {
             }
             setSelectedUniversitas(initialData.universitasId || '');
         }
-    }, [initialData, isEditMode]);
+    }, [initialData, isEditMode, baseUrl]);
 
     // Mengambil fakultas & mengatur nilai fakultas
     useEffect(() => {
@@ -97,7 +96,7 @@ const ProductForm = ({ initialData, onFormSubmit, onClose }) => {
         }
         let isMounted = true;
         setIsFakultasLoading(true);
-        axios.get(`${API_CATEGORY_URL}/fakultas/${selectedUniversitas}`)
+        api.get(`/categories/fakultas/${selectedUniversitas}`)
             .then(response => {
                 if (isMounted) {
                     const umumOption = { id: 'umum', nama: 'Umum Universitas' };
@@ -117,12 +116,12 @@ const ProductForm = ({ initialData, onFormSubmit, onClose }) => {
     const removeMainImage = (previewUrl) => { setMainImages(prevImages => prevImages.filter(img => img.preview !== previewUrl)); };
     const addVariant = () => { setVariants([...variants, { id: Date.now(), name: '', price: '', stock: '', imageFile: null, imagePreview: '' }]); };
     const removeVariant = (id) => { setVariants(variants.filter(v => v.id !== id)); };
-    
+
     // --- PERBAIKAN DI SINI ---
     const handleVariantChange = (index, event) => {
         const { name, value, type } = event.target;
         const newVariants = [...variants];
-        
+
         let finalValue = value;
         // Jika input adalah tipe number, konversi nilainya.
         // Jika kosong, biarkan string kosong agar input bisa dihapus.
@@ -133,7 +132,7 @@ const ProductForm = ({ initialData, onFormSubmit, onClose }) => {
                 finalValue = parsedValue;
             }
         }
-        
+
         newVariants[index][name] = finalValue;
         setVariants(newVariants);
     };
@@ -148,19 +147,13 @@ const ProductForm = ({ initialData, onFormSubmit, onClose }) => {
         setIsSubmitting(true);
         const formData = new FormData();
 
-        // --- LOGIKA BARU UNTUK MENENTUKAN TIPE PRODUK ---
-        let determinedTipeProduk = 'TUNGGAL'; // Default
+        let determinedTipeProduk = 'TUNGGAL';
         if (isPO) {
-            // Jika ini produk PO, tentukan antara PO_DP atau PO_LANGSUNG
             determinedTipeProduk = hargaTotalTipe === 'langsung' ? 'PO_LANGSUNG' : 'PO_DP';
         } else {
-            // Jika bukan produk PO, tentukan antara VARIAN atau TUNGGAL
             determinedTipeProduk = pricingType === 'variant' ? 'VARIAN' : 'TUNGGAL';
         }
-        console.log("Tipe Produk yang akan dikirim:", determinedTipeProduk); // Log untuk verifikasi
-        // --- AKHIR LOGIKA BARU ---
 
-        // Menambahkan semua data ke formData
         formData.append('namaProduk', productName);
         formData.append('deskripsi', description);
         formData.append('status', status);
@@ -169,21 +162,19 @@ const ProductForm = ({ initialData, onFormSubmit, onClose }) => {
         formData.append('universitasId', selectedUniversitas);
         const fakultasValueToSend = selectedFakultas === 'umum' ? '' : selectedFakultas;
         formData.append('fakultasId', fakultasValueToSend);
-        
-        // --- TAMBAHKAN BARIS INI ---
         formData.append('tipeProduk', determinedTipeProduk);
-        
+
         if (isPO) { formData.append('hargaPO', hargaPO); formData.append('stokPO', stokPO); formData.append('hargaTotalPO', hargaTotalTipe === 'langsung' ? hargaTotalPO : ''); }
         if (!isPO && pricingType === 'single') { formData.append('singlePrice', singlePrice); formData.append('singleStock', singleStock); }
-        
+
         const variantDataForJson = variants.map(v => {
-            const isExistingImage = v.imagePreview && v.imagePreview.startsWith(BASE_URL);
-            return { name: v.name, price: v.price, stock: v.stock, existingImageUrl: v.imageFile ? '' : (isExistingImage ? v.imagePreview.replace(`${BASE_URL}/`, '') : '') };
+            const isExistingImage = v.imagePreview && v.imagePreview.startsWith(baseUrl);
+            return { name: v.name, price: v.price, stock: v.stock, existingImageUrl: v.imageFile ? '' : (isExistingImage ? v.imagePreview.replace(`${baseUrl}/`, '') : '') };
         });
 
         if (!isPO && pricingType === 'variant') { formData.append('variants', JSON.stringify(variantDataForJson)); }
 
-        const existingMainImageUrls = mainImages.filter(img => !img.file && img.preview.startsWith(BASE_URL)).map(img => img.preview.replace(`${BASE_URL}/`, ''));
+        const existingMainImageUrls = mainImages.filter(img => !img.file && img.preview.startsWith(baseUrl)).map(img => img.preview.replace(`${baseUrl}/`, ''));
         formData.append('existingImageUrls', JSON.stringify(existingMainImageUrls));
         mainImages.forEach(imageObject => { if (imageObject.file) { formData.append('productImages', imageObject.file); } });
 
@@ -192,14 +183,16 @@ const ProductForm = ({ initialData, onFormSubmit, onClose }) => {
                 if (variant.imageFile) { formData.append(`variantImage_${index}`, variant.imageFile); }
             });
         }
-        
+
         try {
             if (isEditMode) {
-                await axios.patch(`${API_PRODUCT_URL}/${initialData.id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+                // Menggunakan api.patch dengan path relatif dan header yang lengkap
+                await api.patch(`/products/${initialData.id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
                 alert('Produk berhasil diperbarui!');
                 if (onFormSubmit) onFormSubmit();
             } else {
-                await axios.post(API_PRODUCT_URL, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+                // Menggunakan api.post dengan path relatif dan header yang lengkap
+                await api.post('/products', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
                 alert(`Produk berhasil disimpan dengan status: ${status}`);
                 navigate('/kelola-produk');
             }
@@ -219,7 +212,7 @@ const ProductForm = ({ initialData, onFormSubmit, onClose }) => {
                 <div className="form-group"><label>Nama Produk</label><input type="text" value={productName} onChange={(e) => setProductName(e.target.value)} placeholder="Masukkan nama produk..." /></div>
                 <div className="form-group"><label>Deskripsi Produk</label><textarea value={description} onChange={(e) => setDescription(e.target.value)} rows="6" placeholder="Jelaskan detail produk di sini..."></textarea></div>
             </div>
-            <div className="form-card"><h3>Harga, Stok & Pre-Order</h3><div className="form-group"><label className="checkbox-label"><input type="checkbox" checked={isPO} onChange={(e) => setIsPO(e.target.checked)} /> Aktifkan Pre-order?</label></div>{isPO ? (<div className="po-section"><div className="form-grid-2"><div className="form-group"><label>Harga Pre-Order (DP)</label><input type="number" value={hargaPO} onChange={(e) => setHargaPO(e.target.value)} placeholder="Contoh: 50000" /></div><div className="form-group"><label>Stok Pre-Order</label><input type="number" value={stokPO} onChange={(e) => setStokPO(e.target.value)} placeholder="0" /></div></div><div className="form-group"><label>Harga Total Pre-Order</label><div className="radio-group-horizontal"><label><input type="radio" name="hargaTotalTipe" value="langsung" checked={hargaTotalTipe === 'langsung'} onChange={(e) => setHargaTotalTipe(e.target.value)} /> Langsung Isi</label><label><input type="radio" name="hargaTotalTipe" value="nanti" checked={hargaTotalTipe === 'nanti'} onChange={(e) => setHargaTotalTipe(e.target.value)} /> Isi Nanti</label></div>{hargaTotalTipe === 'langsung' && ( <input type="number" value={hargaTotalPO} onChange={(e) => setHargaTotalPO(e.target.value)} placeholder="Masukkan harga total" style={{ marginTop: '1rem' }} /> )}</div></div>) : (<fieldset className="price-fieldset"><div className="pricing-toggle"><label><input type="radio" name="pricingType" value="single" checked={pricingType === 'single'} onChange={() => setPricingType('single')} /> Harga Tunggal</label><label><input type="radio" name="pricingType" value="variant" checked={pricingType === 'variant'} onChange={() => setPricingType('variant')} /> Harga Bervariasi</label></div>{pricingType === 'single' ? (<div className="form-grid-2"><div className="form-group"><label>Harga</label><input type="number" value={singlePrice} onChange={(e) => setSinglePrice(e.target.value)} placeholder="0" /></div><div className="form-group"><label>Stok</label><input type="number" value={singleStock} onChange={(e) => setSingleStock(e.target.value)} placeholder="0" /></div></div>) : (<div className="variant-section">{variants.map((variant, index) => (<div className="variant-row" key={variant.id}><div className="variant-image-uploader" onClick={() => document.getElementById(`variant-image-input-${index}`).click()}><input type="file" id={`variant-image-input-${index}`} style={{ display: 'none' }} accept="image/*" onChange={(e) => handleVariantImageChange(e, index)} />{variant.imagePreview ? (<img src={variant.imagePreview} alt="Varian" className="image-preview" />) : (<span>+</span>)}</div><div className="variant-details"><div className="variant-group"><label>Nama Varian</label><input type="text" name="name" value={variant.name} onChange={e => handleVariantChange(index, e)} /></div><div className="variant-group"><label>Harga</label><input type="number" name="price" value={variant.price} onChange={e => handleVariantChange(index, e)} /></div><div className="variant-group"><label>Stok</label><input type="number" name="stock" value={variant.stock} onChange={e => handleVariantChange(index, e)} /></div></div>{variants.length > 1 && <button type="button" className="remove-variant-btn" onClick={() => removeVariant(variant.id)}>×</button>}</div>))}{<button type="button" className="add-variant-btn" onClick={addVariant}>+ Tambah Varian</button>}</div>)}</fieldset>)}</div>
+            <div className="form-card"><h3>Harga, Stok & Pre-Order</h3><div className="form-group"><label className="checkbox-label"><input type="checkbox" checked={isPO} onChange={(e) => setIsPO(e.target.checked)} /> Aktifkan Pre-order?</label></div>{isPO ? (<div className="po-section"><div className="form-grid-2"><div className="form-group"><label>Harga Pre-Order (DP)</label><input type="number" value={hargaPO} onChange={(e) => setHargaPO(e.target.value)} placeholder="Contoh: 50000" /></div><div className="form-group"><label>Stok Pre-Order</label><input type="number" value={stokPO} onChange={(e) => setStokPO(e.target.value)} placeholder="0" /></div></div><div className="form-group"><label>Harga Total Pre-Order</label><div className="radio-group-horizontal"><label><input type="radio" name="hargaTotalTipe" value="langsung" checked={hargaTotalTipe === 'langsung'} onChange={(e) => setHargaTotalTipe(e.target.value)} /> Langsung Isi</label><label><input type="radio" name="hargaTotalTipe" value="nanti" checked={hargaTotalTipe === 'nanti'} onChange={(e) => setHargaTotalTipe(e.target.value)} /> Isi Nanti</label></div>{hargaTotalTipe === 'langsung' && (<input type="number" value={hargaTotalPO} onChange={(e) => setHargaTotalPO(e.target.value)} placeholder="Masukkan harga total" style={{ marginTop: '1rem' }} />)}</div></div>) : (<fieldset className="price-fieldset"><div className="pricing-toggle"><label><input type="radio" name="pricingType" value="single" checked={pricingType === 'single'} onChange={() => setPricingType('single')} /> Harga Tunggal</label><label><input type="radio" name="pricingType" value="variant" checked={pricingType === 'variant'} onChange={() => setPricingType('variant')} /> Harga Bervariasi</label></div>{pricingType === 'single' ? (<div className="form-grid-2"><div className="form-group"><label>Harga</label><input type="number" value={singlePrice} onChange={(e) => setSinglePrice(e.target.value)} placeholder="0" /></div><div className="form-group"><label>Stok</label><input type="number" value={singleStock} onChange={(e) => setSingleStock(e.target.value)} placeholder="0" /></div></div>) : (<div className="variant-section">{variants.map((variant, index) => (<div className="variant-row" key={variant.id}><div className="variant-image-uploader" onClick={() => document.getElementById(`variant-image-input-${index}`).click()}><input type="file" id={`variant-image-input-${index}`} style={{ display: 'none' }} accept="image/*" onChange={(e) => handleVariantImageChange(e, index)} />{variant.imagePreview ? (<img src={variant.imagePreview} alt="Varian" className="image-preview" />) : (<span>+</span>)}</div><div className="variant-details"><div className="variant-group"><label>Nama Varian</label><input type="text" name="name" value={variant.name} onChange={e => handleVariantChange(index, e)} /></div><div className="variant-group"><label>Harga</label><input type="number" name="price" value={variant.price} onChange={e => handleVariantChange(index, e)} /></div><div className="variant-group"><label>Stok</label><input type="number" name="stock" value={variant.stock} onChange={e => handleVariantChange(index, e)} /></div></div>{variants.length > 1 && <button type="button" className="remove-variant-btn" onClick={() => removeVariant(variant.id)}>×</button>}</div>))}{<button type="button" className="add-variant-btn" onClick={addVariant}>+ Tambah Varian</button>}</div>)}</fieldset>)}</div>
             <div className="form-card"><h3>Kategori Universitas</h3><div className="form-grid-2"><div className="form-group"><label>Universitas</label><select value={selectedUniversitas} onChange={(e) => setSelectedUniversitas(e.target.value)}><option value="">-- Pilih Universitas --</option>{universitasList.map(univ => (<option key={univ.id} value={univ.id}>{univ.nama}</option>))}</select></div><div className="form-group"><label>Fakultas</label><select value={selectedFakultas} onChange={(e) => setSelectedFakultas(e.target.value)} disabled={!selectedUniversitas || isFakultasLoading}><option value="">{isFakultasLoading ? 'Memuat...' : '-- Pilih Fakultas --'}</option>{fakultasList.map(fak => (<option key={fak.id} value={fak.id}>{fak.nama}</option>))}</select></div></div></div>
             <div className="form-actions">{isEditMode && <button type="button" className="btn-delete" onClick={onClose} disabled={isSubmitting}>Batal</button>}{!isEditMode && <button type="button" className="btn-delete" onClick={resetForm} disabled={isSubmitting}>Reset Form</button>}<button type="button" className="btn-secondary" onClick={() => handleSave('Arsip')} disabled={isSubmitting}>{isSubmitting ? 'Menyimpan...' : (isEditMode ? 'Simpan & Arsipkan' : 'Simpan & Arsipkan')}</button><button type="button" className="btn-primary" onClick={() => handleSave('Aktif')} disabled={isSubmitting}>{isSubmitting ? 'Menyimpan...' : (isEditMode ? 'Simpan Perubahan' : 'Simpan & Tampilkan')}</button></div>
         </div>
